@@ -17,18 +17,11 @@ function App() {
         return res.json();
       })
       .then((data) => {
+        data.sort((a, b) => (a.rating < b.rating ? 1 : -1));
         setVideos(data);
       });
   };
   const PushVideo = (arr) => {
-    console.log("=======");
-    const vid = {
-      id: 52345555154545,
-      title: "Andile",
-      url: "https://www.youtube.com/watch?v=HerCR8bw_GE",
-      rating: 230,
-    };
-
     setVideos([...videos, arr]);
   };
   const Delete = (e) => {
@@ -36,6 +29,7 @@ function App() {
     const newArray = videos.filter((contact) => {
       return contact.id != e;
     });
+
     setVideos(newArray);
   };
   useEffect(() => {

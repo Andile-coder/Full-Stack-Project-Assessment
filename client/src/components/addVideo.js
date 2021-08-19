@@ -8,7 +8,19 @@ const AddVideo = (props) => {
   };
   const Add = (e) => {
     e.preventDefault();
-    props.pushVideo(addedVid);
+    if (addedVid.title === "" || addedVid.url === "") {
+      return alert("All Fields are mandatory");
+    } else if (addedVid.url != "") {
+      var p =
+        /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+      if (addedVid.url.match(p)) {
+        console.log("video validated");
+        props.pushVideo(addedVid);
+        return addedVid.url.match(p)[1];
+      }
+      console.log("video not validated");
+      return false;
+    }
   };
   return (
     <div>
