@@ -1,8 +1,8 @@
 import React from "react";
 import ReactPlayer from "react-player";
+import { Link } from "react-router-dom";
 import Ratings from "./ratings";
 const Video = (props) => {
-  const [id, title, url, rating] = props.data;
   const video = props.data.map((vid) => {
     return (
       <div key={vid.id}>
@@ -15,12 +15,21 @@ const Video = (props) => {
             <button onClick={() => props.delete(vid.id)}>Delete</button>
           </span>
           <span>
-            <Ratings rate={vid.rating} />
+            <Ratings video={[vid.id, vid.rating]} />
           </span>
         </div>
       </div>
     );
   });
-  return video;
+  return (
+    <div>
+      <div>
+        <Link to="/addVideo">
+          <button>Add Video</button>
+        </Link>
+      </div>
+      {video}
+    </div>
+  );
 };
 export default Video;
