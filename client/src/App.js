@@ -1,18 +1,15 @@
 import { React, useState, useEffect } from "react";
 import "./App.css";
 import Video from "./components/video.js";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import AddVideo from "./components/addVideo";
 
 function App() {
   const [videos, setVideos] = useState([]);
+  const [trash, setTrash] = useState(true); //use this state to render loadvids everytime delete function is called
 
   const loadVids = () => {
-    fetch("exampleresponse.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
+    fetch("http://localhost:3000/", {})
       .then((res) => {
         return res.json();
       })
@@ -24,24 +21,36 @@ function App() {
   const PushVideo = (arr) => {
     setVideos([...videos, arr]);
   };
-  const Delete = (e) => {
-    console.log(e);
-    const newArray = videos.filter((contact) => {
-      return contact.id != e;
-    });
-
-    setVideos(newArray);
+  const Delete = (id) => {
+    fetch(`http://localhost:3000/${id}`, {
+      method: "DELETE",
+    }).catch((e) => console.error(e));
+    setTrash(!trash);
   };
   useEffect(() => {
     loadVids();
-  }, []);
+  }, [trash]);
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Video Recommendation</h1>
-        <AddVideo pushVideo={PushVideo} />
-      </header>
-      <Video data={videos} delete={Delete} />
+      <Router>
+        <header className="App-header">
+          <h1>Video Recommendation</h1>
+        </header>
+        <Switch>
+          <Route
+            path="/"
+            exact
+            render={(props) => (
+              <Video {...props} data={videos} delete={Delete} />
+            )}
+          />
+          <Route
+            path="/AddVideo"
+            exact
+            render={(props) => <AddVideo {...props} pushVideo={PushVideo} />}
+          />
+        </Switch>
+      </Router>
     </div>
   );
 }
