@@ -1,14 +1,31 @@
 import { React, useState, useEffect } from "react";
 const Ratings = (props) => {
-  const [votes, setVotes] = useState(props.rate);
+  const [id, rating] = props.video;
+  const [ratings, setRatings] = useState(rating);
   const IncrementRating = () => {
+    const Rater = () => {
+      fetch(`http://localhost:3000/${id}`, {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          rating: ratings,
+        }),
+      });
+    };
+
+    useEffect(() => {
+      Rater();
+    });
     return (
       <span>
-        <button onClick={() => setVotes(votes + 1)}>UP</button>
+        <button onClick={(e) => setRatings(ratings + 1)}>UP</button>
         <span>
-          <p>{votes}</p>
+          <p>{ratings}</p>
         </span>
-        <button onClick={() => setVotes(votes - 1)}>DOWN</button>
+        <button onClick={(e) => setRatings(ratings - 1)}>DOWN</button>
       </span>
     );
   };
